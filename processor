@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+
+use ChocoDNA\Generator;
+
+require __DIR__ . '/vendor/autoload.php';
+
+// Ensure the script is executed in a CLI (Command Line Interface) environment
+if (php_sapi_name() !== "cli") {
+    echo "This script must be run from the command line.";
+    exit(503); // 503: Service Unavailable
+}
+
+/**
+ * Validate the arguments passed to the script.
+ *
+ * - The script expects exactly one argument: the path to the input file.
+ */
+if (count($argv) != 2) {
+    echo "Usage: chocobilly <input_file>" . PHP_EOL;
+    exit(1); // Exit with code 1 indicating invalid arguments
+}
+
+$input_file = $argv[1];
+
+echo "Processing: " . $input_file . PHP_EOL;
+
+/**
+ * Check if the input file exists. If it doesn't, exit with an error.
+ */
+if (!file_exists($input_file)) {
+    echo "Input file not found.";
+    exit(1); // Exit with code 1 indicating file not found
+}
+
+$input = file_get_contents($input_file);
+
+try {
+    $result = Generator::generate($input);
+    file_put_contents('output.txt', $result);
+    echo PHP_EOL . "Saved to output.txt. Result: <<" . PHP_EOL . $result . PHP_EOL . ">>" . PHP_EOL;
+} catch (Throwable $e) {
+    // Handle errors and display the exception message
+    echo $e->getMessage();
+    exit(1); // Exit with code 1 indicating an error occurred
+}
+
+echo 'finished' . PHP_EOL; // Success
