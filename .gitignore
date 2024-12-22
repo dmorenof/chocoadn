@@ -1,5 +1,5 @@
 /vendor/
 /.idea/
 composer.lock
-input.txt
-output.txt
+input*.txt
+output*.txt
